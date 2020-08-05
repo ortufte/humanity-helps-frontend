@@ -1,8 +1,13 @@
 endPoint = ('http://localhost:3000/api/v1/users')
 
 document.addEventListener('DOMContentLoaded', () => {
-    getUsers()
+    // getUsers()
+    findSites()
+    addSite()
 })
+
+//This function will eventually be called in an event listener on 'get sites' button after entering zipcode. 
+// I will have to add a conditional for zipcode/distance. User = Donation Site. Put this in User class?
 
 function getUsers() {
     fetch(endPoint)
@@ -10,7 +15,7 @@ function getUsers() {
     .then(user => {
 
         let userDiv = document.querySelector('#users-container')
-
+        `<h2>Donation Sites</h2>`
         user.data.forEach(data => {
             const userData = 
             `<div id=${data.id}>
@@ -26,10 +31,8 @@ function getUsers() {
             itemData(data);
 
         }) 
-
-
     })
-}       
+};       
 
 function dayData(data) {
     const userSchedule = 
@@ -43,7 +46,7 @@ function dayData(data) {
 
         div.innerHTML += dayData
     })
-}
+};
 
 function itemData(data) {
 
@@ -55,5 +58,52 @@ function itemData(data) {
 
         div.innerHTML += itemData
     })
+};
 
-}
+
+function findSites() {
+    const formsDiv = document.querySelector('#forms')
+
+    const findSitesForm = 
+    `<form id="get-sites">
+    <h3>Find Donation Sites</h3>
+    <input id="zipcode" type="text" name="zipcode" placeholder="Enter Zipcode">
+    <input id="find-button" type="submit" name="submit" value="Search" class="submit">
+    </form>`;
+
+    formsDiv.innerHTML += findSitesForm
+
+    let form = document.getElementById("get-sites")
+    form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        console.log(e)
+    })
+};
+
+
+function addSite() {
+    const formsDiv = document.querySelector('#forms')
+
+    const createSiteForm = 
+    `<form id="create-site">
+    <h3>Create a New Donation Site</h3>
+    <input id="name" type="text" name="name" placeholder="Name">
+    <input id="street-address" type="text" name="street-address" placeholder="Street Address">
+    <input id="city" type="text" name="city" placeholder="City">
+    <input id="state" type="text" name="state" placeholder="State">
+    <input id="zipcode" type="text" name="zipcode" placeholder="Zipcode">
+    <input id="create-button" type="submit" name="submit" value="Create" class="submit">
+    </form>`;
+ 
+    formsDiv.innerHTML += createSiteForm
+
+    let form = document.getElementById("create-site")
+    form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        console.log(e)
+    })
+};
+
+//are you accepting donations? <button>Add your Donation Site</button> - on click, form appears
+//form - build it out in javascript - event listener on 'Submit Donation Site' button. - then alert user that site has/has/not been created.
+
