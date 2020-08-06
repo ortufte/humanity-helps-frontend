@@ -1,34 +1,53 @@
 endPoint = ('http://localhost:3000/api/v1/users')
 
 document.addEventListener('DOMContentLoaded', () => {
-    getUsers()
     findSites()
     addSite()
     findButton()
     createButton()
 })
 
-function getUsers() {
+function findSites() {
+    const formsDiv = document.querySelector('#forms')
+
+    const findSitesForm = 
+    `<form id="get-sites">
+    <h3>Find Donation Sites</h3>
+    <input id="zipcode" type="text" name="zipcode" placeholder="Enter Zipcode">
+    <input id="find-button" type="submit" name="submit" value="Search" class="submit">
+    </form>`;
+
+    formsDiv.innerHTML += findSitesForm
+};
+
+function findButton() {
+    let findForm = document.querySelector("#get-sites")
+    findForm.addEventListener("submit", function(e) {
+    e.preventDefault();
+    let zip = e.target.zipcode.value
+    getSites(zip)
+    })
+}
+
+function getSites(zip) {
     fetch(endPoint)
     .then(response => response.json())
-    .then(user => {
-
+    .then(users => {
         let userDiv = document.querySelector(`#users-container`);
-        `<h2>Donation Sites</h2>`
-        user.data.forEach(data => {
-            const userData = 
-            `<div id=${data.id}>
-            <h3>${data.attributes.name}</h3>
-            <p>${data.attributes.street_address}</p>
-            <p>${data.attributes.city}, ${data.attributes.state}, ${data.attributes.zipcode}</p>
-
-            </div><br>`;
+        users.data.forEach(data => {
+            if(zip === data.attributes.zipcode) {
+                const userData = 
+                `<div id=${data.id}>
+                <h3>${data.attributes.name}</h3>
+                <p>${data.attributes.street_address}</p>
+                <p>${data.attributes.city}, ${data.attributes.state}, ${data.attributes.zipcode}</p>
+                </div><br>`;
 
             userDiv.innerHTML += userData
 
             dayData(data);
             itemData(data);
-
+            };
         }) 
     })
 };       
@@ -59,29 +78,6 @@ function itemData(data) {
     })
 };
 
-
-function findSites() {
-    const formsDiv = document.querySelector('#forms')
-
-    const findSitesForm = 
-    `<form id="get-sites">
-    <h3>Find Donation Sites</h3>
-    <input id="zipcode" type="text" name="zipcode" placeholder="Enter Zipcode">
-    <input id="find-button" type="submit" name="submit" value="Search" class="submit">
-    </form>`;
-
-    formsDiv.innerHTML += findSitesForm
-};
-
-function findButton() {
-    let findForm = document.querySelector("#get-sites")
-
-    findForm.addEventListener("submit", function(e) {
-    e.preventDefault();
-    console.log(e)
-    })
-}
-
 function addSite() {
     const formsDiv = document.querySelector('#forms')
 
@@ -105,7 +101,8 @@ function createButton() {
     form.addEventListener("submit", (e) => {
     e.preventDefault();
     console.log(e)
-})
+    })
+
 }
 
 
