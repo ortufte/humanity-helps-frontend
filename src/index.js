@@ -3,8 +3,10 @@ endPoint = ('http://localhost:3000/api/v1/users')
 document.addEventListener('DOMContentLoaded', () => {
     findSites()
     addSite()
+    addItem()
     findButton()
     createButton()
+
 })
 
 function findSites() {
@@ -34,6 +36,7 @@ function getSites(zip) {
     .then(response => response.json())
     .then(users => {
         let userDiv = document.querySelector(`#users-container`);
+        userDiv.innerHTML += `<h2>Donation Sites</h2>`
         users.data.forEach(data => {
             if(zip === data.attributes.zipcode) {
                 const userData = 
@@ -53,6 +56,7 @@ function getSites(zip) {
     })
 };       
 
+//I want to add buttons here instead of the actual data. They will have event listeners and will show the data when clicked.
 function dayData(data) {
     const userSchedule = 
 
@@ -78,6 +82,7 @@ function itemData(data) {
         div.innerHTML += itemData
     })
 };
+//////////
 
 function addSite() {
     const formsDiv = document.querySelector('#forms')
@@ -91,10 +96,39 @@ function addSite() {
     <input id="state" type="text" name="state" placeholder="State">
     <input id="zipcode" type="text" name="zipcode" placeholder="Zipcode">
     <input id="create-button" type="submit" name="submit" value="Create" class="submit">
-    </form>`;
+    </form><br>`;
  
     formsDiv.innerHTML += createSiteForm
 };
+
+function addItem() {
+    const formsDiv = document.querySelector('#forms')
+
+    const createItemForm = 
+    `<form id="create-item">
+    <h3>Add Items to your List</h3>
+    <input id="description" type="text" name="description" placeholder="Description">
+    <input id="quantity" type="text" name="quantity" placeholder="Quantity">
+    <input id="add-item" type="submit" name="submit" value="Add" class="submit">
+    </form>`;
+
+    formsDiv.innerHTML += createItemForm
+};
+
+function addDay() {
+    const formsDiv = document.querySelector('#forms')
+
+    const createDayForm = 
+    `<form id="create-day">
+    <h3>Add a Day to your Schedule</h3>
+    <input id="" type="text" name="description" placeholder="Description">
+    <input id="quantity" type="text" name="quantity" placeholder="Quantity">
+    <input id="add-item" type="submit" name="submit" value="Add" class="submit">
+    </form>`;
+
+    formsDiv.innerHTML += createDayForm
+
+}
 
 function createButton() {
     let form = document.getElementById("create-site")
@@ -136,7 +170,8 @@ function createSite(e) {
         <h3>${site.data.attributes.name}</h3>
         <p>${site.data.attributes.street_address}</p>
         <p>${site.data.attributes.city}, ${site.data.attributes.state}, ${site.data.attributes.zipcode}</p>
-        </div><br>`;
+        </div><br>`
+    .catch(error => window.alert("missing information"));
 
     userDiv.innerHTML += siteData
     })
