@@ -48,7 +48,8 @@ function getSites(zip) {
             dayData(data);
             itemData(data);
             };
-        }) 
+        })  
+        document.querySelector('#zipcode').value = " "
     })
 };       
 
@@ -85,7 +86,7 @@ function addSite() {
     `<form id="create-site">
     <h3>Create a New Donation Site</h3>
     <input id="name" type="text" name="name" placeholder="Name">
-    <input id="street-address" type="text" name="street-address" placeholder="Street Address">
+    <input id="street" type="text" name="street" placeholder="Street Address">
     <input id="city" type="text" name="city" placeholder="City">
     <input id="state" type="text" name="state" placeholder="State">
     <input id="zipcode" type="text" name="zipcode" placeholder="Zipcode">
@@ -100,9 +101,46 @@ function createButton() {
 
     form.addEventListener("submit", (e) => {
     e.preventDefault();
-    console.log(e)
+    // console.log(e.target.name.value)
+    createSite(e)
     })
-
 }
+
+function createSite(e) {
+    let name = e.target.name.value;
+    let streetAddress = e.target.street.value;
+    let city = e.target.city.value;
+    let state = e.target.state.value;
+    let zipcode = e.target.zipcode.value;
+
+    fetch(endPoint, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          },
+          body: JSON.stringify({
+              name: name,
+              street_address: streetAddress,
+              city: city,
+              state: state,
+              zipcode: zipcode,
+          })
+    })
+    .then(response => response.json())
+    .then(site => {
+        console.log(site.data.attributes)
+        let userDiv = document.querySelector(`#users-container`);
+        const siteData = 
+        `<div id=${site.data.id}>
+        <h3>${site.data.attributes.name}</h3>
+        <p>${site.data.attributes.street_address}</p>
+        <p>${site.data.attributes.city}, ${site.data.attributes.state}, ${site.data.attributes.zipcode}</p>
+        </div><br>`;
+
+    userDiv.innerHTML += siteData
+    })
+}
+
 
 
