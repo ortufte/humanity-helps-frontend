@@ -1,20 +1,19 @@
 endPoint = ('http://localhost:3000/api/v1/users')
 
 document.addEventListener('DOMContentLoaded', () => {
-    // getUsers()
+    getUsers()
     findSites()
     addSite()
+    findButton()
+    createButton()
 })
-
-//This function will eventually be called in an event listener on 'get sites' button after entering zipcode. 
-// I will have to add a conditional for zipcode/distance. User = Donation Site. Put this in User class?
 
 function getUsers() {
     fetch(endPoint)
     .then(response => response.json())
     .then(user => {
 
-        let userDiv = document.querySelector('#users-container')
+        let userDiv = document.querySelector(`#users-container`);
         `<h2>Donation Sites</h2>`
         user.data.forEach(data => {
             const userData = 
@@ -72,14 +71,16 @@ function findSites() {
     </form>`;
 
     formsDiv.innerHTML += findSitesForm
-
-    let form = document.getElementById("get-sites")
-    form.addEventListener("submit", (e) => {
-        e.preventDefault();
-        console.log(e)
-    })
 };
 
+function findButton() {
+    let findForm = document.querySelector("#get-sites")
+
+    findForm.addEventListener("submit", function(e) {
+    e.preventDefault();
+    console.log(e)
+    })
+}
 
 function addSite() {
     const formsDiv = document.querySelector('#forms')
@@ -96,14 +97,15 @@ function addSite() {
     </form>`;
  
     formsDiv.innerHTML += createSiteForm
-
-    let form = document.getElementById("create-site")
-    form.addEventListener("submit", (e) => {
-        e.preventDefault();
-        console.log(e)
-    })
 };
 
-//are you accepting donations? <button>Add your Donation Site</button> - on click, form appears
-//form - build it out in javascript - event listener on 'Submit Donation Site' button. - then alert user that site has/has/not been created.
+function createButton() {
+    let form = document.getElementById("create-site")
+
+    form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    console.log(e)
+})
+}
+
 
