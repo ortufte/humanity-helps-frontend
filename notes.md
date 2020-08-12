@@ -15,5 +15,7 @@ BUGS
 
 8/11
 1. fetch requests: GET all sites on page load, GET narrow sites by zipcode, POST enter a new site
-2. Need to change schema, site will have one schedule instead of many days.
-3. need to recreate form to enter all info for site at once...form will be dynamic, adding items one at a time while inside the site form...possible? 
+2. now creating site, upon click of crate site button, pop up will appear allowing user to add items and schedule. 
+
+3. show sites as cards, click for more info, show in modal?
+
