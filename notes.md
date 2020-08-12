@@ -17,5 +17,5 @@ BUGS
 1. fetch requests: GET all sites on page load, GET narrow sites by zipcode, POST enter a new site
 2. now creating site, upon click of crate site button, pop up will appear allowing user to add items and schedule. 
 
-
+3. show sites as cards, click for more info, show in modal?
 
