@@ -140,20 +140,20 @@ function createSite(e) {
     })
     .then(response => response.json())
     .then(site => {
-        displaySite(site)
+        let newUser = new User(site.data.id, site.data.attributes)
+        displaySite(newUser)
     })
   
 };
 
 function displaySite(site) {
-
     const siteDiv = document.querySelector(`#site-container`);
 
     const siteData = 
-    `<div id=${site.data.id}>
-    <h3>${site.data.attributes.name}</h3>
-    <p>${site.data.attributes.street_address}</p>
-    <p>${site.data.attributes.city}, ${site.data.attributes.state}, ${site.data.attributes.zipcode}</p>
+    `<div id=${site.id}>
+    <h3>${site.name}</h3>
+    <p>${site.street_address}</p>
+    <p>${site.city}, ${site.state}, ${site.zipcode}</p>
 
     </div>`
 
@@ -176,8 +176,8 @@ function displaySite(site) {
     itemsDiv.appendChild(itemsForm);
     scheduleDiv.appendChild(daysForm);
 
-    addItem(site.data.id);
-    addDay(site.data.id);
+    addItem(site.id);
+    addDay(site.id);
 }
 
 function addItem(siteId) {
