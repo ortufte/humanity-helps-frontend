@@ -131,13 +131,12 @@ function createSite(e) {
     })
     .then(response => response.json())
     .then(site => {
-
+        debugger
         let newSite = new Site(site.data.id, site.data.attributes)
         const siteDiv = document.querySelector(`#site-container`);
         siteDiv.innerHTML += newSite.renderSiteData()
 
     })
-  
 };
 
 function displaySite(site) {

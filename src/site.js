@@ -1,4 +1,4 @@
-class User {
+class Site {
     constructor(siteId, siteAttributes) {
         this.id = siteId
         this.name = siteAttributes.name
@@ -6,7 +6,7 @@ class User {
         this.city = siteAttributes.city
         this.state = siteAttributes.state
         this.zipcode = siteAttributes.zipcode
-        User.all.push(this)
+        Site.all.push(this)
 
     }
 
@@ -24,4 +24,4 @@ class User {
 //data.attributes.items
 
 
-User.all = []
+Site.all = []
