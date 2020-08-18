@@ -1,4 +1,4 @@
-endPointUsers = ('http://localhost:3000/api/v1/users')
+endPointSites = ('http://localhost:3000/api/v1/sites')
 endPointItems = (`http://localhost:3000/api/v1/items`)
 endPointDays = ('http://localhost:3000/api/v1/days')
 
@@ -37,39 +37,30 @@ function findSitesButton() {
 };
 
 function getSites(zip) {
-    fetch(endPointUsers)
+    fetch(endPointSites)
     .then(response => response.json())
     .then(users => {
-        let userDiv = document.querySelector(`#search-results`);
-        userDiv.innerHTML += `<h2>Donation Sites</h2>`
-        
         users.data.forEach(data => {
-            
+     
             if(zip === data.attributes.zipcode) {
-                const userData = 
-                `<div id=${data.id}>
-                <h3>${data.attributes.name}</h3>
-                <p>${data.attributes.street_address}</p>
-                <p>${data.attributes.city}, ${data.attributes.state}, ${data.attributes.zipcode}</p>
-                </div><br>`;
+                let newSite = new Site(data.id, data.attributes)
+                let siteDiv = document.querySelector(`#site-container`);
+                siteDiv.innerHTML += newSite.renderSiteData()
 
-            userDiv.innerHTML += userData
-
-            dayData(data);
-            itemData(data);
-            };
-        }) 
-
+                renderDayData(data);
+                itemData(data);
+            }
+        })
         document.querySelector('#zipcode').value = " "
     });  
 }     
 
-function dayData(data) {
-    const userSchedule = 
+
+function renderDayData(data) {
 
     data.attributes.days.forEach(day => {
 
-        let div = document.getElementById(`${day.user_id}`)
+        let div = document.getElementById(`${day.site_id}`)
         
         const dayData = 
         `<p>${day.day_of_week}: ${day.start_time} to ${day.end_time}</p>`;
@@ -82,7 +73,7 @@ function itemData(data) {
 
     data.attributes.items.forEach(item => {
 
-        let div = document.getElementById(`${item.user_id}`)
+        let div = document.getElementById(`${item.site_id}`)
         const itemData = 
         `<p>${item.quantity} - ${item.description}</p>`;
 
@@ -124,7 +115,7 @@ function createSite(e) {
     let state = e.target.state.value;
     let zipcode = e.target.zip.value;
 
-    fetch(endPointUsers, {
+    fetch(endPointSites, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -140,8 +131,11 @@ function createSite(e) {
     })
     .then(response => response.json())
     .then(site => {
-        let newUser = new User(site.data.id, site.data.attributes)
-        displaySite(newUser)
+
+        let newSite = new Site(site.data.id, site.data.attributes)
+        const siteDiv = document.querySelector(`#site-container`);
+        siteDiv.innerHTML += newSite.renderSiteData()
+
     })
   
 };
