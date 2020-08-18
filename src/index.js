@@ -1,4 +1,4 @@
-endPointUsers = ('http://localhost:3000/api/v1/users')
+endPointSites = ('http://localhost:3000/api/v1/sites')
 endPointItems = (`http://localhost:3000/api/v1/items`)
 endPointDays = ('http://localhost:3000/api/v1/days')
 
@@ -37,7 +37,7 @@ function findSitesButton() {
 };
 
 function getSites(zip) {
-    fetch(endPointUsers)
+    fetch(endPointSites)
     .then(response => response.json())
     .then(users => {
         let userDiv = document.querySelector(`#search-results`);
@@ -124,7 +124,7 @@ function createSite(e) {
     let state = e.target.state.value;
     let zipcode = e.target.zip.value;
 
-    fetch(endPointUsers, {
+    fetch(endPointSites, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -146,7 +146,6 @@ function createSite(e) {
 };
 
 function displaySite(site) {
-
     const siteDiv = document.querySelector(`#site-container`);
 
     const siteData = 
