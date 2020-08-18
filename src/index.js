@@ -46,38 +46,29 @@ function getSites(zip) {
                 let newSite = new Site(data.id, data.attributes)
                 let siteDiv = document.querySelector(`#site-container`);
                 siteDiv.innerHTML += newSite.renderSiteData()
-
                 renderDayData(data);
-                itemData(data);
+                renderItemData(data);
             }
-        })
-        document.querySelector('#zipcode').value = " "
-    });  
+       
+            document.querySelector('#zipcode').value = " "
+
+        });  
+    })
 }     
 
-
 function renderDayData(data) {
-
     data.attributes.days.forEach(day => {
-
-        let div = document.getElementById(`${day.site_id}`)
-        
-        const dayData = 
-        `<p>${day.day_of_week}: ${day.start_time} to ${day.end_time}</p>`;
-
-        div.innerHTML += dayData
+        let newDay = new Day(day)
+        let div = document.querySelector('#schedule');
+        div.innerHTML += newDay.renderDayData()
     })
 };
 
-function itemData(data) {
-
+function renderItemData(data) {
     data.attributes.items.forEach(item => {
-
-        let div = document.getElementById(`${item.site_id}`)
-        const itemData = 
-        `<p>${item.quantity} - ${item.description}</p>`;
-
-        div.innerHTML += itemData
+        let newItem = new Item(item)
+        let div = document.querySelector('#items');
+        div.innerHTML += newItem.renderItemData()
     })
 };
 
@@ -131,63 +122,18 @@ function createSite(e) {
     })
     .then(response => response.json())
     .then(site => {
-        debugger
-        let newSite = new Site(site.data.id, site.data.attributes)
+        let newSite = new Site(site.id, site.data.attributes)
         const siteDiv = document.querySelector(`#site-container`);
         siteDiv.innerHTML += newSite.renderSiteData()
-
+        siteDiv.innerHTML += newSite.newSiteItem()
+        createItemButton()
     })
-};
-
-function displaySite(site) {
-    const siteDiv = document.querySelector(`#site-container`);
-
-    const siteData = 
-    `<div id=${site.id}>
-    <h3>${site.name}</h3>
-    <p>${site.street_address}</p>
-    <p>${site.city}, ${site.state}, ${site.zipcode}</p>
-
-    </div>`
-
-    siteDiv.innerHTML += siteData
-
-    let itemsDiv = document.createElement("div");
-    itemsDiv.setAttribute("id","items");
-    
-    let scheduleDiv = document.createElement("div");
-    scheduleDiv.setAttribute("id", "schedule");
-
-    let itemsForm = document.createElement("container");
-    itemsForm.setAttribute("id", "items-form")
-
-    let daysForm = document.createElement("container");
-    daysForm.setAttribute("id", "days-form");
-
-    siteDiv.appendChild(itemsDiv);
-    siteDiv.appendChild(scheduleDiv);
-    itemsDiv.appendChild(itemsForm);
-    scheduleDiv.appendChild(daysForm);
-
-    addItem(site.id);
-    addDay(site.id);
-}
-
-function addItem(siteId) {
-    let itemsForm = document.getElementById("items-form")
-    const itemForm = 
-    `<br><form id="create-item" name=${siteId}>
-    <input id="item-box" type="text" name="description" placeholder="Description"/>
-    <input id="qty" type="integer" name="quantity" placeholder="Quantity">
-    <input id="create-button" type="submit" name="submit" value="Add Item" class="submit">
-    </form><br>`;
-    itemsForm.innerHTML += itemForm
-    createItemButton()
 };
 
 function createItemButton() {
     let itemForm = document.getElementById("create-item")
     itemForm.addEventListener("submit", (e) => {
+        console.log(e)
     e.preventDefault();
     createItems(e)
     })
@@ -197,7 +143,7 @@ function createItems(e) {
     let user_id = e.target.name;
     let description = e.target.description.value;
     let quantity = e.target.quantity.value;
-
+//can actually go to sites/id
         fetch(endPointItems, {
             method: "POST",
             headers: {
@@ -251,7 +197,9 @@ function createSchedule(e) {
     let start = e.target.start.value;
     let end = e.target.end.value;
 
-        fetch(endPointDays, {
+    //I can actually post to sites/id-------------------------------------------------------------------------------------------
+    
+    fetch(endPointDays, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
