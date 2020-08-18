@@ -45,7 +45,7 @@ function getSites(zip) {
             if(zip === data.attributes.zipcode) {
                 let newSite = new Site(data.id, data.attributes)
                 let siteDiv = document.querySelector(`#site-container`);
-                siteDiv.innerHTML += newSite.renderSiteData()
+                siteDiv.innerHTML = newSite.renderSiteData()
                 renderDayData(data);
                 renderItemData(data);
             }
@@ -123,17 +123,20 @@ function createSite(e) {
     .then(response => response.json())
     .then(site => {
         let newSite = new Site(site.id, site.data.attributes)
-        const siteDiv = document.querySelector(`#site-container`);
+        let siteDiv = document.querySelector(`#site-container`);
         siteDiv.innerHTML += newSite.renderSiteData()
-        siteDiv.innerHTML += newSite.newSiteItem()
+        let itemsDiv = document.querySelector(`#items`)
+        itemsDiv.innerHTML += newSite.newSiteItem()
+        let scheduleDiv = document.querySelector(`#schedule`)
+        scheduleDiv.innerHTML += newSite.newSiteDay()
         createItemButton()
+        createSiteButton()
     })
 };
 
 function createItemButton() {
     let itemForm = document.getElementById("create-item")
     itemForm.addEventListener("submit", (e) => {
-        console.log(e)
     e.preventDefault();
     createItems(e)
     })
@@ -168,19 +171,6 @@ function createItems(e) {
     document.querySelector('#item-box').value = " "
     document.querySelector('#qty').value = " "
 }
-
-function addDay(siteId) {
-    let daysForm = document.getElementById("days-form");
-    const dayForm = 
-    `<br><form id="create-day" name=${siteId}>
-    <input id="day-box" type="text" name="day" placeholder="ex. Monday"/>
-    <input id="start-time" type="string" name="start" placeholder="ex. 6:00am"/>
-    <input id="end-time" type="string" name="end" placeholder="ex. 5:00pm"/>
-    <input id="create-button" type="submit" name="submit" value="Add Day" class="submit">
-    </form><br>`;
-    daysForm.innerHTML += dayForm
-    createDayButton()
-};
 
 function createDayButton() {
     let dayForm = document.getElementById("create-day")

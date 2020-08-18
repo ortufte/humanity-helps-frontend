@@ -35,6 +35,16 @@ class Site {
             </form><br>`;
     };
 
+    newSiteDay() {
+        return `
+            <br><form id="create-day">
+            <input id="day-box" type="string" name="day" placeholder="ex. Monday"/>
+            <input id="start-time" type="string" name="start" placeholder="ex. 6:00am"/>
+            <input id="end-time" type="string" name="end" placeholder="ex. 5:00pm"/>
+            <input id="create-button" type="submit" name="submit" value="Add Day" class="submit">
+            </form><br>`;
+    }
+
 
 
     static findById(id) {
