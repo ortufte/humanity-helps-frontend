@@ -1,5 +1,5 @@
 endPointSites = ('http://localhost:3000/api/v1/sites')
-endPointItems = (`http://localhost:3000/api/v1/items`)
+endPointItems = ('http://localhost:3000/api/v1/items')
 endPointDays = ('http://localhost:3000/api/v1/days')
 
 
@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     createSiteButton()
 });
 
+// find sites by zipcode form, appears on DOM Load
 function findSitesForm() {
     const findByZipcode = document.querySelector('#find-by-zipcode')
 
@@ -23,6 +24,7 @@ function findSitesForm() {
     findByZipcode.innerHTML += findSites
 };
 
+// find sites button event listener
 function findSitesButton() {
     let findForm = document.querySelector("#get-sites")
     
@@ -36,11 +38,12 @@ function findSitesButton() {
     })
 };
 
+// list sites that match zipcode etered in form
 function getSites(zip) {
     fetch(endPointSites)
     .then(response => response.json())
-    .then(users => {
-        users.data.forEach(data => {
+    .then(sites => {
+        sites.data.forEach(data => {
      
             if(zip === data.attributes.zipcode) {
                 let newSite = new Site(data.id, data.attributes)
@@ -56,6 +59,7 @@ function getSites(zip) {
     })
 }     
 
+// list the days that belong to the site
 function renderDayData(data) {
     data.attributes.days.forEach(day => {
         let newDay = new Day(day)
@@ -64,6 +68,7 @@ function renderDayData(data) {
     })
 };
 
+// list the items that belong to the site
 function renderItemData(data) {
     data.attributes.items.forEach(item => {
         let newItem = new Item(item)
@@ -72,7 +77,7 @@ function renderItemData(data) {
     })
 };
 
-
+// create a new site form, appears on DOM Load
 function createSiteForm() {
     const formsDiv = document.querySelector('#new-site-forms')
 
@@ -90,6 +95,7 @@ function createSiteForm() {
     formsDiv.innerHTML += createSiteForm
 };
 
+// create site button add event listener
 function createSiteButton() {
     let siteForm = document.getElementById("create-site")
 
@@ -99,6 +105,7 @@ function createSiteButton() {
     })
 };
 
+// create a new donation site
 function createSite(e) {
     let name = e.target.name.value;
     let streetAddress = e.target.street.value;
@@ -122,18 +129,24 @@ function createSite(e) {
     })
     .then(response => response.json())
     .then(site => {
-        let newSite = new Site(site.id, site.data.attributes)
+        let newSite = new Site(site.data.id, site.data.attributes)
         let siteDiv = document.querySelector(`#site-container`);
-        siteDiv.innerHTML += newSite.renderSiteData()
+        siteDiv.innerHTML = newSite.renderSiteData()
         let itemsDiv = document.querySelector(`#items`)
-        itemsDiv.innerHTML += newSite.newSiteItem()
+        itemsDiv.innerHTML += newSite.newSiteItem(site.id)
         let scheduleDiv = document.querySelector(`#schedule`)
-        scheduleDiv.innerHTML += newSite.newSiteDay()
-        createItemButton()
-        createSiteButton()
+        scheduleDiv.innerHTML += newSite.newSiteDay(site.id)
+        createItemButton();
+        createDayButton();
     })
+    document.querySelector('#name').value = " "
+    document.querySelector('#street').value = " "
+    document.querySelector('#city').value = " "
+    document.querySelector('#state').value = " "
+    document.querySelector('#zip').value = " "
 };
 
+// createItem event listener
 function createItemButton() {
     let itemForm = document.getElementById("create-item")
     itemForm.addEventListener("submit", (e) => {
@@ -142,11 +155,22 @@ function createItemButton() {
     })
 };
 
+//createDay event listener
+function createDayButton() {
+    let dayForm = document.getElementById("create-day")
+    dayForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    createSchedule(e)
+    })
+};
+
+//-----------------------------------------------------------------------------------------------------------
+
 function createItems(e) {
-    let user_id = e.target.name;
+    let site_id = e.target.name;
     let description = e.target.description.value;
     let quantity = e.target.quantity.value;
-//can actually go to sites/id
+    debugger
         fetch(endPointItems, {
             method: "POST",
             headers: {
@@ -154,13 +178,14 @@ function createItems(e) {
                 "Accept": "application/json"
               },
               body: JSON.stringify({
-                user_id: user_id,
+                site_id: site_id,
                 quantity: quantity,
                 description: description,
               })
         })
         .then(response => response.json())
         .then(item => {
+            debugger
             let itemsDiv = document.querySelector(`#items`);
             let itemData = document.createElement("li");
            
@@ -172,23 +197,14 @@ function createItems(e) {
     document.querySelector('#qty').value = " "
 }
 
-function createDayButton() {
-    let dayForm = document.getElementById("create-day")
-    dayForm.addEventListener("submit", (e) => {
-    e.preventDefault();
-    createSchedule(e)
-    })
-};
-
 
 function createSchedule(e) {
-    let user_id = e.target.name;
-    let day = e.target.day.value;
-    let start = e.target.start.value;
-    let end = e.target.end.value;
-
-    //I can actually post to sites/id-------------------------------------------------------------------------------------------
-    
+    let site_id = e.target.name;
+    let day_of_week = e.target.day.value;
+    let start_time = e.target.start.value;
+    let end_time = e.target.end.value;
+    debugger
+  
     fetch(endPointDays, {
             method: "POST",
             headers: {
@@ -196,10 +212,10 @@ function createSchedule(e) {
                 "Accept": "application/json"
               },
               body: JSON.stringify({
-                  user_id: user_id,
-                  day_of_week: day,
-                  start_time: start, 
-                  end_time: end,
+                  site_id: site_id,
+                  day_of_week: day_of_week,
+                  start_time: start_time, 
+                  end_time: end_time,
               })
         })
         .then(response => response.json())
@@ -212,9 +228,9 @@ function createSchedule(e) {
 
         })
 
-        document.querySelector('#day-box').value = " ";
-        document.querySelector('#start-time').value = " ";
-        document.querySelector('#end-time').value = " ";
+        // document.querySelector('#day-box').value = " ";
+        // document.querySelector('#start-time').value = " ";
+        // document.querySelector('#end-time').value = " ";
 }
 
 

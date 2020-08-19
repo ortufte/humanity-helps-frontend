@@ -28,7 +28,7 @@ class Site {
 
     newSiteItem() {
         return `
-            <br><form id="create-item">
+            <br><form id="create-item" name=${this.id}>
             <input id="item-box" type="text" name="description" placeholder="Description"/>
              <input id="qty" type="integer" name="quantity" placeholder="Quantity">
             <input id="create-button" type="submit" name="submit" value="Add Item" class="submit">
@@ -37,7 +37,7 @@ class Site {
 
     newSiteDay() {
         return `
-            <br><form id="create-day">
+            <br><form id="create-day" name=${this.id}>
             <input id="day-box" type="string" name="day" placeholder="ex. Monday"/>
             <input id="start-time" type="string" name="start" placeholder="ex. 6:00am"/>
             <input id="end-time" type="string" name="end" placeholder="ex. 5:00pm"/>
