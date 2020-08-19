@@ -139,11 +139,13 @@ function createSite(e) {
         createItemButton();
         createDayButton();
     })
+
     document.querySelector('#name').value = " "
     document.querySelector('#street').value = " "
     document.querySelector('#city').value = " "
     document.querySelector('#state').value = " "
     document.querySelector('#zip').value = " "
+
 };
 
 // createItem event listener
