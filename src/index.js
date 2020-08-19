@@ -1,5 +1,5 @@
 endPointSites = ('http://localhost:3000/api/v1/sites')
-endPointItems = (`http://localhost:3000/api/v1/items`)
+endPointItems = ('http://localhost:3000/api/v1/items')
 endPointDays = ('http://localhost:3000/api/v1/days')
 
 
@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     createSiteButton()
 });
 
+// find sites by zipcode form, appears on DOM Load
 function findSitesForm() {
     const findByZipcode = document.querySelector('#find-by-zipcode')
 
@@ -23,6 +24,7 @@ function findSitesForm() {
     findByZipcode.innerHTML += findSites
 };
 
+// find sites button event listener
 function findSitesButton() {
     let findForm = document.querySelector("#get-sites")
     
@@ -36,61 +38,46 @@ function findSitesButton() {
     })
 };
 
+// list sites that match zipcode etered in form
 function getSites(zip) {
     fetch(endPointSites)
     .then(response => response.json())
-    .then(users => {
-        let userDiv = document.querySelector(`#search-results`);
-        userDiv.innerHTML += `<h2>Donation Sites</h2>`
-        
-        users.data.forEach(data => {
-            
+    .then(sites => {
+        sites.data.forEach(data => {
+     
             if(zip === data.attributes.zipcode) {
-                const userData = 
-                `<div id=${data.id}>
-                <h3>${data.attributes.name}</h3>
-                <p>${data.attributes.street_address}</p>
-                <p>${data.attributes.city}, ${data.attributes.state}, ${data.attributes.zipcode}</p>
-                </div><br>`;
+                let newSite = new Site(data.id, data.attributes)
+                let siteDiv = document.querySelector(`#site-container`);
+                siteDiv.innerHTML = newSite.renderSiteData()
+                renderDayData(data);
+                renderItemData(data);
+            }
+       
+            document.querySelector('#zipcode').value = " "
 
-            userDiv.innerHTML += userData
-
-            dayData(data);
-            itemData(data);
-            };
-        }) 
-
-        document.querySelector('#zipcode').value = " "
-    });  
+        });  
+    })
 }     
 
-function dayData(data) {
-    const userSchedule = 
-
+// list the days that belong to the site
+function renderDayData(data) {
     data.attributes.days.forEach(day => {
-
-        let div = document.getElementById(`${day.user_id}`)
-        
-        const dayData = 
-        `<p>${day.day_of_week}: ${day.start_time} to ${day.end_time}</p>`;
-
-        div.innerHTML += dayData
+        let newDay = new Day(day)
+        let div = document.querySelector('#schedule');
+        div.innerHTML += newDay.renderDayData()
     })
 };
 
-function itemData(data) {
-
+// list the items that belong to the site
+function renderItemData(data) {
     data.attributes.items.forEach(item => {
-
-        let div = document.getElementById(`${item.user_id}`)
-        const itemData = 
-        `<p>${item.quantity} - ${item.description}</p>`;
-
-        div.innerHTML += itemData
+        let newItem = new Item(item)
+        let div = document.querySelector('#items');
+        div.innerHTML += newItem.renderItemData()
     })
 };
 
-
+// create a new site form, appears on DOM Load
 function createSiteForm() {
     const formsDiv = document.querySelector('#new-site-forms')
 
@@ -108,6 +95,7 @@ function createSiteForm() {
     formsDiv.innerHTML += createSiteForm
 };
 
+// create site button add event listener
 function createSiteButton() {
     let siteForm = document.getElementById("create-site")
 
@@ -117,6 +105,7 @@ function createSiteButton() {
     })
 };
 
+// create a new donation site
 function createSite(e) {
     let name = e.target.name.value;
     let streetAddress = e.target.street.value;
@@ -140,57 +129,26 @@ function createSite(e) {
     })
     .then(response => response.json())
     .then(site => {
-        displaySite(site)
+        let newSite = new Site(site.data.id, site.data.attributes)
+        let siteDiv = document.querySelector(`#site-container`);
+        siteDiv.innerHTML = newSite.renderSiteData()
+        let itemsDiv = document.querySelector(`#items`)
+        itemsDiv.innerHTML += newSite.newSiteItem(site.id)
+        let scheduleDiv = document.querySelector(`#schedule`)
+        scheduleDiv.innerHTML += newSite.newSiteDay(site.id)
+        createItemButton();
+        createDayButton();
     })
-  
+
+    document.querySelector('#name').value = " "
+    document.querySelector('#street').value = " "
+    document.querySelector('#city').value = " "
+    document.querySelector('#state').value = " "
+    document.querySelector('#zip').value = " "
+
 };
 
-function displaySite(site) {
-    const siteDiv = document.querySelector(`#site-container`);
-
-    const siteData = 
-    `<div id=${site.data.id}>
-    <h3>${site.data.attributes.name}</h3>
-    <p>${site.data.attributes.street_address}</p>
-    <p>${site.data.attributes.city}, ${site.data.attributes.state}, ${site.data.attributes.zipcode}</p>
-
-    </div>`
-
-    siteDiv.innerHTML += siteData
-
-    let itemsDiv = document.createElement("div");
-    itemsDiv.setAttribute("id","items");
-    
-    let scheduleDiv = document.createElement("div");
-    scheduleDiv.setAttribute("id", "schedule");
-
-    let itemsForm = document.createElement("container");
-    itemsForm.setAttribute("id", "items-form")
-
-    let daysForm = document.createElement("container");
-    daysForm.setAttribute("id", "days-form");
-
-    siteDiv.appendChild(itemsDiv);
-    siteDiv.appendChild(scheduleDiv);
-    itemsDiv.appendChild(itemsForm);
-    scheduleDiv.appendChild(daysForm);
-
-    addItem(site.data.id);
-    addDay(site.data.id);
-}
-
-function addItem(siteId) {
-    let itemsForm = document.getElementById("items-form")
-    const itemForm = 
-    `<br><form id="create-item" name=${siteId}>
-    <input id="item-box" type="text" name="description" placeholder="Description"/>
-    <input id="qty" type="integer" name="quantity" placeholder="Quantity">
-    <input id="create-button" type="submit" name="submit" value="Add Item" class="submit">
-    </form><br>`;
-    itemsForm.innerHTML += itemForm
-    createItemButton()
-};
-
+// createItem event listener
 function createItemButton() {
     let itemForm = document.getElementById("create-item")
     itemForm.addEventListener("submit", (e) => {
@@ -199,11 +157,22 @@ function createItemButton() {
     })
 };
 
+//createDay event listener
+function createDayButton() {
+    let dayForm = document.getElementById("create-day")
+    dayForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    createSchedule(e)
+    })
+};
+
+//-----------------------------------------------------------------------------------------------------------
+
 function createItems(e) {
-    let user_id = e.target.name;
+    let site_id = e.target.name;
     let description = e.target.description.value;
     let quantity = e.target.quantity.value;
-
+    debugger
         fetch(endPointItems, {
             method: "POST",
             headers: {
@@ -211,13 +180,14 @@ function createItems(e) {
                 "Accept": "application/json"
               },
               body: JSON.stringify({
-                user_id: user_id,
+                site_id: site_id,
                 quantity: quantity,
                 description: description,
               })
         })
         .then(response => response.json())
         .then(item => {
+            debugger
             let itemsDiv = document.querySelector(`#items`);
             let itemData = document.createElement("li");
            
@@ -229,45 +199,25 @@ function createItems(e) {
     document.querySelector('#qty').value = " "
 }
 
-function addDay(siteId) {
-    let daysForm = document.getElementById("days-form");
-    const dayForm = 
-    `<br><form id="create-day" name=${siteId}>
-    <input id="day-box" type="text" name="day" placeholder="ex. Monday"/>
-    <input id="start-time" type="string" name="start" placeholder="ex. 6:00am"/>
-    <input id="end-time" type="string" name="end" placeholder="ex. 5:00pm"/>
-    <input id="create-button" type="submit" name="submit" value="Add Day" class="submit">
-    </form><br>`;
-    daysForm.innerHTML += dayForm
-    createDayButton()
-};
-
-function createDayButton() {
-    let dayForm = document.getElementById("create-day")
-    dayForm.addEventListener("submit", (e) => {
-    e.preventDefault();
-    createSchedule(e)
-    })
-};
-
 
 function createSchedule(e) {
-    let user_id = e.target.name;
-    let day = e.target.day.value;
-    let start = e.target.start.value;
-    let end = e.target.end.value;
-
-        fetch(endPointDays, {
+    let site_id = e.target.name;
+    let day_of_week = e.target.day.value;
+    let start_time = e.target.start.value;
+    let end_time = e.target.end.value;
+    debugger
+  
+    fetch(endPointDays, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
                 "Accept": "application/json"
               },
               body: JSON.stringify({
-                  user_id: user_id,
-                  day_of_week: day,
-                  start_time: start, 
-                  end_time: end,
+                  site_id: site_id,
+                  day_of_week: day_of_week,
+                  start_time: start_time, 
+                  end_time: end_time,
               })
         })
         .then(response => response.json())
@@ -280,9 +230,9 @@ function createSchedule(e) {
 
         })
 
-        document.querySelector('#day-box').value = " ";
-        document.querySelector('#start-time').value = " ";
-        document.querySelector('#end-time').value = " ";
+        // document.querySelector('#day-box').value = " ";
+        // document.querySelector('#start-time').value = " ";
+        // document.querySelector('#end-time').value = " ";
 }
 
 
