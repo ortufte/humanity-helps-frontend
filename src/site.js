@@ -17,11 +17,11 @@ class Site {
                 <h3>${this.name}</h3>
                 <p>${this.street_address}</p>
                 <p>${this.city}, ${this.state}, ${this.zipcode}</p>
-                <div id="schedule">
+                <div id="${this.id} schedule">
                     <h4>Schedule</h4>
                 </div> 
-                <div id="items">
-                    <h4>Items</h4>
+                <div id="${this.id} items">
+                    <h4>Items Needed</h4>
                 </div>
             </container>`;
     }
