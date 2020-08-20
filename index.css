@@ -3,13 +3,10 @@
  */
 
 /* Links */
-a,
-a:focus,
-a:hover {
-  color: #fff;
-}
+
 
 /* Custom default button */
+
 .btn-secondary,
 .btn-secondary:hover,
 .btn-secondary:focus {
@@ -18,16 +15,12 @@ a:hover {
   background-color: #fff;
   border: .05rem solid #fff;
 }
-.collapse-form {
-  text-align: center;
-  width: 100%;
+
+.btn-block {
+  color: #E84D4D;
+  font-weight: bold;
 }
 
-.bottom {
-  bottom:0;
-  width: 100%;
-  color: #E84D4D
-}
 /*
  * Base structure
  */
@@ -36,6 +29,8 @@ html,
 body {
   height: 100%;
   background-color: #006063;
+
+  font-family: Baskerville;
 }
 
 body {
@@ -48,8 +43,8 @@ body {
   max-width: em;
 }
 
-.modal-title {
-  color: black
+.hidden {
+  display: none;
 }
 
 /*
@@ -68,50 +63,6 @@ body {
   /* font-weight: bold; */
 }
 
-.nav-masthead .nav-link {
-  padding: .25rem 0;
-  font-weight: 700;
-  color: rgba(255, 255, 255, .5);
-  background-color: transparent;
-  border-bottom: .25rem solid transparent;
-}
-
-.nav-masthead .nav-link:hover,
-.nav-masthead .nav-link:focus {
-  border-bottom-color: rgba(255, 255, 255, .25);
-}
-
-.nav-masthead .nav-link + .nav-link {
-  margin-left: 1rem;
-}
-
-.nav-masthead .active {
-  color: #fff;
-  border-bottom-color: #fff;
-}
-
-@media (min-width: 48em) {
-  .nav-masthead {
-    float: right;
-  }
-}
-
-/*
- * Cover
- */
-.cover {
-  padding: 0 1.5rem;
-}
-.cover .btn-lg {
-  padding: .75rem 1.25rem;
-  font-weight: 700;
-}
-
-
 /*
  * Footer
  */
-.mastfoot {
-  /* background-color: #E84D4D  ; */ 
-  color: rgba(255, 255, 255, .5);
-}
