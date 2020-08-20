@@ -3,8 +3,6 @@ const endPointItems = ('http://localhost:3000/api/v1/items')
 const endPointDays = ('http://localhost:3000/api/v1/days')
 
 
-
-
 document.addEventListener('DOMContentLoaded', () => {
     findSitesForm()
     findSitesButton()
@@ -21,7 +19,7 @@ function findSitesForm() {
 
     const findSites = 
     `<form id="get-sites">
-    <h3>Find Donation Sites</h3>
+    <h3>FIND DONATION SITES</h3>
     <input id="zipcode" type="text" name="zipcode" placeholder="Enter Zipcode">
     <input id="find-button" type="submit" name="submit" value="Search" class="submit">
     </form>`;
@@ -140,7 +138,7 @@ function createSiteForm() {
 
     const createSiteForm = 
     `<form id="create-site">
-    <h3>Create a New Donation Site</h3>
+    <h3>CREATE A NEW DONATION SITE</h3>
     <input id="name" type="text" name="name" placeholder="Name">
     <input id="street" type="text" name="street" placeholder="Street Address">
     <input id="city" type="text" name="city" placeholder="City">

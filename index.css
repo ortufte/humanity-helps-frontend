@@ -29,14 +29,22 @@ html,
 body {
   height: 100%;
   background-color: #006063;
+  background-image: url("images/tim-mossholder-zs-PAgqgenQ-unsplash.png");
+  /* background-size: contain; */
+  background-repeat: repeat-y;
+  background-position: center;
+  font-family: "Andale Mono";
 
-  font-family: Baskerville;
 }
 
 body {
   display: -ms-flexbox;
   display: flex;
   color: #fff;
+}
+
+h3 {
+  font-weight: bold;
 }
 
 .cover-container {
@@ -46,6 +54,7 @@ body {
 .hidden {
   display: none;
 }
+
 
 /*
  * Header
