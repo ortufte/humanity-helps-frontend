@@ -51,7 +51,6 @@ function getSites(zip) {
             if(zip === data.attributes.zipcode) {
 
                 let newSite = new Site(data.id, data.attributes)
-
                 const main = document.querySelector("#main")
 
                 let divCard = document.createElement("div")
@@ -69,11 +68,13 @@ function getSites(zip) {
             // alert(`There are no donation sites in the ${zip} area currently.`)
             // }
         });  
-
+        let btnDiv = document.createElement("div")
+    
         let backBtn = document.createElement("BUTTON")
         backBtn.setAttribute("id", "save-and-exit")
         backBtn.innerHTML = "Back to Home"
-        main.appendChild(backBtn)
+        btnDiv.append(backBtn)
+        main.append(btnDiv)
         saveAndExit()
 
         const findByZipcode = document.querySelector('#find-by-zipcode')
@@ -122,6 +123,10 @@ function addSiteButton() {
 
     getSiteForm(addSiteButton)
 }
+
+
+
+
 
 //add eventlistener to the add site button
 function getSiteForm(addSiteButton) {
@@ -196,26 +201,31 @@ function createSite(e) {
     })
     .then(response => response.json())
     .then(site => {
+        // site card
         let newSite = new Site(site.data.id, site.data.attributes)
         const main = document.querySelector("#main")
 
         let siteDiv = document.createElement("div")
         siteDiv.setAttribute("id", "site-card");
-
-        main.appendChild(siteDiv)
-
+        siteDiv.setAttribute("class", "card-lg")
         siteDiv.innerHTML = newSite.renderSiteData()
+        main.appendChild(siteDiv)
  
+        //items form
         let itemsDiv = document.getElementById(`${site.data.id} items`)
         itemsDiv.innerHTML += newSite.newSiteItem(site.id)
 
+        //schedule form 
         let scheduleDiv = document.getElementById(`${site.data.id} schedule`)
         scheduleDiv.innerHTML += newSite.newSiteDay(site.id)
+
+        let btnDiv = document.createElement("div")
 
         let saveAndExitButton = document.createElement("BUTTON");
         saveAndExitButton.setAttribute("id", "save-and-exit")
         saveAndExitButton.innerHTML = "Save and Exit"
-        siteDiv.appendChild(saveAndExitButton)
+        btnDiv.appendChild(saveAndExitButton)
+        main.append(btnDiv)
 
         createItemButton();
         createDayButton();
