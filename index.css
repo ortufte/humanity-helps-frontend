@@ -43,6 +43,19 @@ body {
   color: #fff;
 }
 
+.card {
+  text-align: center;
+  border: grey solid 1px;
+  padding: 1rem;
+  width: 25rem;
+  height: 30rem;
+  display: inline-grid;
+  margin: 1rem 2rem;
+  box-shadow: 3px 4px #e04b52;
+  background-color: white;
+  opacity: 60%;
+  color: black;
+}
 h3 {
   font-weight: bold;
 }

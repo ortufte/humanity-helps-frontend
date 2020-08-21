@@ -49,15 +49,18 @@ function getSites(zip) {
         sites.data.forEach(data => {
      
             if(zip === data.attributes.zipcode) {
+
                 let newSite = new Site(data.id, data.attributes)
 
                 const main = document.querySelector("#main")
 
-                let siteDiv = document.createElement("div")
-                siteDiv.setAttribute("id", "site-container");
-                siteDiv.innerHTML += newSite.renderSiteData()
+                let divCard = document.createElement("div")
+                divCard.setAttribute("id", "site-card");
+                divCard.setAttribute("class", "card")
 
-                main.appendChild(siteDiv)
+                divCard.innerHTML += newSite.renderSiteData()
+
+                main.append(divCard)
 
                 renderDayData(data);
                 renderItemData(data);
@@ -197,7 +200,7 @@ function createSite(e) {
         const main = document.querySelector("#main")
 
         let siteDiv = document.createElement("div")
-        siteDiv.setAttribute("id", "site-container");
+        siteDiv.setAttribute("id", "site-card");
 
         main.appendChild(siteDiv)
 
