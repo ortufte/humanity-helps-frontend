@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // find sites by zipcode form, appears on DOM Load
 function findSitesForm() {
+    
     const findByZipcode = document.createElement("div")
     findByZipcode.setAttribute("id","find-by-zipcode")
     const mainDiv = document.getElementById("main")
@@ -41,13 +42,26 @@ function findSitesButton() {
     })
 };
 
-// list sites that match zipcode etered in form
+// get sites that match zipcode etered in form
 function getSites(zip) {
     fetch(endPointSites)
     .then(response => response.json())
     .then(sites => {
+        listSites(sites, zip)
+    })
+}     
+
+function errorHandler(data) {
+    if(data.errors) {
+        data.errors.forEach(error =>
+        alert(error))
+    }     
+}
+
+//list sites that match zipcode entered in form 
+function listSites(sites, zip) {
+        errorHandler(sites)
         sites.data.forEach(data => {
-     
             if(zip === data.attributes.zipcode) {
 
                 let newSite = new Site(data.id, data.attributes)
@@ -63,13 +77,10 @@ function getSites(zip) {
 
                 renderDayData(data);
                 renderItemData(data);
-            }
-            // else {
-            // alert(`There are no donation sites in the ${zip} area currently.`)
-            // }
-        });  
+            } 
+        })
+
         let btnDiv = document.createElement("div")
-    
         let backBtn = document.createElement("BUTTON")
         backBtn.setAttribute("id", "save-and-exit")
         backBtn.innerHTML = "Back to Home"
@@ -81,11 +92,14 @@ function getSites(zip) {
         findByZipcode.remove()
         const buttonDiv = document.querySelector("#button-div")
         buttonDiv.remove()
-    })
-    .catch(error => {
-        console.log(error)
-    })
-}     
+
+        // debugger
+        // if(!Site.all.includes(zip)) {
+        //     alert("We are sorry, there are no donation sites in your area at this time. Check back frequently as new sites are being added all the time.")
+        // }
+}
+
+
 
 // list the days that belong to the site
 function renderDayData(data) {
@@ -123,9 +137,6 @@ function addSiteButton() {
 
     getSiteForm(addSiteButton)
 }
-
-
-
 
 
 //add eventlistener to the add site button
@@ -171,14 +182,12 @@ function createSiteButton() {
     let siteForm = document.getElementById("create-site")
     siteForm.addEventListener("submit", (e) => {
         e.preventDefault();
-        createSite(e);
+        postSite(e);
     });
-
 }
 
-
 // create a new donation site
-function createSite(e) {
+function postSite(e) {
     let name = e.target.name.value;
     let streetAddress = e.target.street.value;
     let city = e.target.city.value;
@@ -201,57 +210,44 @@ function createSite(e) {
     })
     .then(response => response.json())
     .then(site => {
-        // site card
-        let newSite = new Site(site.data.id, site.data.attributes)
-        const main = document.querySelector("#main")
-
-        let siteDiv = document.createElement("div")
-        siteDiv.setAttribute("id", "site-card");
-        siteDiv.setAttribute("class", "card-lg")
-        siteDiv.innerHTML = newSite.renderSiteData()
-        main.appendChild(siteDiv)
- 
-        //items form
-        let itemsDiv = document.getElementById(`${site.data.id} items`)
-        itemsDiv.innerHTML += newSite.newSiteItem(site.id)
-
-        //schedule form 
-        let scheduleDiv = document.getElementById(`${site.data.id} schedule`)
-        scheduleDiv.innerHTML += newSite.newSiteDay(site.id)
-
-        let btnDiv = document.createElement("div")
-
-        let saveAndExitButton = document.createElement("BUTTON");
-        saveAndExitButton.setAttribute("id", "save-and-exit")
-        saveAndExitButton.innerHTML = "Save and Exit"
-        btnDiv.appendChild(saveAndExitButton)
-        main.append(btnDiv)
-
-        createItemButton();
-        createDayButton();
-        saveAndExit();
-        
+        renderSite(site)
     })
-
-    let siteFormDiv = document.querySelector("#site-form-div")
-    siteFormDiv.remove()
-
+    // let siteFormDiv = document.querySelector("#site-form-div")
+    // siteFormDiv.remove()
 };
 
-function saveAndExit() {
-    let saveAndExitButton = document.getElementById("save-and-exit")
-    saveAndExitButton.addEventListener("click", (e) => {
-        e.preventDefault();
+function renderSite(site) {
+    errorHandler(site)
 
-        let main = document.getElementById("main");
-        while (main.firstChild) {
-            main.removeChild(main.firstChild);
-        }
- 
-        findSitesForm();
-        findSitesButton();
-        addSiteButton();
-    })
+    // site card
+    let newSite = new Site(site.data.id, site.data.attributes)
+    const main = document.querySelector("#main")
+
+    let siteDiv = document.createElement("div")
+    siteDiv.setAttribute("id", "site-card");
+    siteDiv.setAttribute("class", "card-lg")
+    siteDiv.innerHTML = newSite.renderSiteData()
+    main.appendChild(siteDiv)
+
+    //items form
+    let itemsDiv = document.getElementById(`${site.data.id} items`)
+    itemsDiv.innerHTML += newSite.newSiteItem(site.id)
+
+    //schedule form 
+    let scheduleDiv = document.getElementById(`${site.data.id} schedule`)
+    scheduleDiv.innerHTML += newSite.newSiteDay(site.id)
+
+    let btnDiv = document.createElement("div")
+
+    let saveAndExitButton = document.createElement("BUTTON");
+    saveAndExitButton.setAttribute("id", "save-and-exit")
+    saveAndExitButton.innerHTML = "Save and Exit"
+    btnDiv.appendChild(saveAndExitButton)
+    main.append(btnDiv)
+
+    createItemButton();
+    createDayButton();
+    saveAndExit();
 }
 
 // createItem event listener
@@ -273,7 +269,24 @@ function createDayButton() {
 };
 
 
-//creates new days and lists them on page
+function saveAndExit() {
+    let saveAndExitButton = document.getElementById("save-and-exit")
+    saveAndExitButton.addEventListener("click", (e) => {
+        e.preventDefault();
+
+        let main = document.getElementById("main");
+        while (main.firstChild) {
+            main.removeChild(main.firstChild);
+        }
+ 
+        findSitesForm();
+        findSitesButton();
+        addSiteButton();
+    })
+}
+
+
+//creates new days and renders them
 function createSchedule(e) {
     let site_id = e.target.name;
     let day_of_week = e.target.day.value;
@@ -295,7 +308,7 @@ function createSchedule(e) {
         })
         .then(response => response.json())
         .then(day => {
-
+     
             let scheduleDiv = document.getElementById(`${day.data.attributes.site_id} schedule`)
             let dayData = document.createElement("li");
 
@@ -309,7 +322,8 @@ function createSchedule(e) {
         createDayButton(e);
 }
 
-//creates new items and lists them on page
+
+//creates new items and renders them
 function createItems(e) {
     let site_id = e.target.name;
     let description = e.target.description.value;
@@ -328,6 +342,7 @@ function createItems(e) {
         })
         .then(response => response.json())
         .then(item => { 
+
             let itemsDiv = document.getElementById(`${item.data.attributes.site_id} items`)
             let itemData = document.createElement("li");
            
