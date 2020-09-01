@@ -39,6 +39,10 @@ function findSitesButton() {
         if(zip) {
         getSites(zip)
         }
+        else {
+            alert("No zipcode entered.")
+        }
+        
     })
 };
 
@@ -51,16 +55,10 @@ function getSites(zip) {
     })
 }     
 
-function errorHandler(data) {
-    if(data.errors) {
-        data.errors.forEach(error =>
-        alert(error))
-    }     
-}
 
 //list sites that match zipcode entered in form 
 function listSites(sites, zip) {
-        errorHandler(sites)
+       
         sites.data.forEach(data => {
             if(zip === data.attributes.zipcode) {
 
@@ -212,10 +210,18 @@ function postSite(e) {
     .then(site => {
         renderSite(site)
     })
-    // let siteFormDiv = document.querySelector("#site-form-div")
-    // siteFormDiv.remove()
+    let siteFormDiv = document.querySelector("#site-form-div")
+    siteFormDiv.remove()
 };
 
+function errorHandler(data) {
+    if(data.errors) {
+        data.errors.forEach(error =>
+        alert(error))
+    }     
+    createSiteForm() //renders form buut the button event listener does not work
+}
+ 
 function renderSite(site) {
     errorHandler(site)
 
@@ -273,7 +279,6 @@ function saveAndExit() {
     let saveAndExitButton = document.getElementById("save-and-exit")
     saveAndExitButton.addEventListener("click", (e) => {
         e.preventDefault();
-
         let main = document.getElementById("main");
         while (main.firstChild) {
             main.removeChild(main.firstChild);
@@ -308,7 +313,7 @@ function createSchedule(e) {
         })
         .then(response => response.json())
         .then(day => {
-     
+            errorHandler(day)
             let scheduleDiv = document.getElementById(`${day.data.attributes.site_id} schedule`)
             let dayData = document.createElement("li");
 
@@ -319,7 +324,6 @@ function createSchedule(e) {
         let site = Site.findById(e.target.name);
         let dayForm = document.getElementById("create-day");
         dayForm.innerHTML = site.newSiteDay();
-        createDayButton(e);
 }
 
 
@@ -342,7 +346,7 @@ function createItems(e) {
         })
         .then(response => response.json())
         .then(item => { 
-
+            errorHandler(item)
             let itemsDiv = document.getElementById(`${item.data.attributes.site_id} items`)
             let itemData = document.createElement("li");
            
@@ -354,7 +358,6 @@ function createItems(e) {
         let site = Site.findById(e.target.name);
             let itemsForm = document.getElementById("create-item");
             itemsForm.innerHTML = site.newSiteItem();
-            createItemButton(e);
 }
 
 
