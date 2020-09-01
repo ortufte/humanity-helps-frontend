@@ -219,7 +219,7 @@ function errorHandler(data) {
         data.errors.forEach(error =>
         alert(error))
     }     
-    createSiteForm() //renders form buut the button event listener does not work
+    // createSiteForm() //renders form but the button event listener does not work
 }
  
 function renderSite(site) {
