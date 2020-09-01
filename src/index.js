@@ -55,66 +55,79 @@ function getSites(zip) {
     })
 }     
 
-
-//list sites that match zipcode entered in form 
 function listSites(sites, zip) {
-       
-        sites.data.forEach(data => {
-            if(zip === data.attributes.zipcode) {
+    errorHandler(sites)
+    let sortedSites = sites.data.sort(function(a, b) {
+    
+        if(a.attributes.name.toLowerCase() > b.attributes.name.toLowerCase()) {
+            return 1
+        };
+        if(a.attributes.name.toLowerCase() < b.attributes.name.toLowerCase()) {
+            return -1
+        };
+        if(a.attributes.name.toLowerCase() === b.attributes.name.toLowerCase()) {
+            return 0
+        };
+    })
 
-                let newSite = new Site(data.id, data.attributes)
-                const main = document.querySelector("#main")
+    sortedSites.forEach(site => {
+        if(zip === site.attributes.zipcode) {
+            // debugger
+            let newSite = new Site(site.id, site.attributes)
+            const main = document.querySelector("#main")
 
-                let divCard = document.createElement("div")
-                divCard.setAttribute("id", "site-card");
-                divCard.setAttribute("class", "card")
+            let divCard = document.createElement("div")
+            divCard.setAttribute("id", "site-card");
+            divCard.setAttribute("class", "card")
 
-                divCard.innerHTML += newSite.renderSiteData()
+            divCard.innerHTML += newSite.renderSiteData()
+            debugger
 
-                main.append(divCard)
+            main.append(divCard)
 
-                renderDayData(data);
-                renderItemData(data);
-            } 
-        })
+            renderDayData(site);
+            renderItemData(site);
+        } 
+    })
 
-        let btnDiv = document.createElement("div")
-        let backBtn = document.createElement("BUTTON")
-        backBtn.setAttribute("id", "save-and-exit")
-        backBtn.innerHTML = "Back to Home"
-        btnDiv.append(backBtn)
-        main.append(btnDiv)
-        saveAndExit()
+    let btnDiv = document.createElement("div")
+    let backBtn = document.createElement("BUTTON")
+    backBtn.setAttribute("id", "save-and-exit")
+    backBtn.innerHTML = "Back to Home"
+    btnDiv.append(backBtn)
+    main.append(btnDiv)
+    saveAndExit()
 
-        const findByZipcode = document.querySelector('#find-by-zipcode')
-        findByZipcode.remove()
-        const buttonDiv = document.querySelector("#button-div")
-        buttonDiv.remove()
+    const findByZipcode = document.querySelector('#find-by-zipcode')
+    findByZipcode.remove()
+    const buttonDiv = document.querySelector("#button-div")
+    buttonDiv.remove()
 
-        // debugger
-        // if(!Site.all.includes(zip)) {
-        //     alert("We are sorry, there are no donation sites in your area at this time. Check back frequently as new sites are being added all the time.")
-        // }
+    // debugger
+    // if(!Site.all.includes(zip)) {
+    //     alert("We are sorry, there are no donation sites in your area at this time. Check back frequently as new sites are being added all the time.")
+    // }
 }
 
 
 
 // list the days that belong to the site
 function renderDayData(data) {
-    data.attributes.days.forEach(day => {
-        let newDay = new Day(day)
-        let div = document.getElementById(`${data.id} schedule`);
-        div.innerHTML += newDay.renderDayData()
-    })
+debugger
+data.attributes.days.forEach(day => {
+    let newDay = new Day(day)
+    let div = document.getElementById(`${data.id} schedule`);
+    div.innerHTML += newDay.renderDayData()
+})
 };
 
 // list the items that belong to the site
 function renderItemData(data) {
-    data.attributes.items.forEach(item => {
-        let newItem = new Item(item)
-        let div = document.getElementById(`${data.id} items`);
-        div.innerHTML += newItem.renderItemData()
-    })
+data.attributes.items.forEach(item => {
+    let newItem = new Item(item)
+    let div = document.getElementById(`${data.id} items`);
+    div.innerHTML += newItem.renderItemData()
+})
 };
 
 
